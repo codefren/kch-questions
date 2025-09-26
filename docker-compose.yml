@@ -1,10 +1,12 @@
-version: '3.8'
+networks:
+  optimroute:
+    external: true
 
 services:
 
   kch-api:
     build:
-      context: ./kch-questions
+      context: .
       dockerfile: Dockerfile
     container_name: kch-fastapi
     environment:
@@ -18,7 +20,7 @@ services:
     ports:
       - "8000:8000"                 # host → contenedor
     volumes:
-      - ./kch-questions:/app        # Para desarrollo con hot reload
+      - .:/app                      # Para desarrollo con hot reload
     restart: unless-stopped
     networks:
       - optimroute
