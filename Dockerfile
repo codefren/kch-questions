@@ -14,14 +14,15 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
-
-# Make start script executable
+# Copy start script and make it executable
+COPY start.sh .
 RUN chmod +x start.sh
+
+# Copy rest of application code
+COPY . .
 
 # Expose port
 EXPOSE 8000
 
 # Command to run the application
-CMD ["./start.sh"]
+CMD ["bash", "./start.sh"]
