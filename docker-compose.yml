@@ -20,8 +20,6 @@ services:
     networks:
       - optimroute
     depends_on:
-      postgres:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
