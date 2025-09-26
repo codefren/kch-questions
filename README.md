@@ -2,6 +2,14 @@
 
 API REST con 9 endpoints para recopilar datos de clientes a través de formularios específicos.
 
+## 🌐 URL de Producción
+
+**API en vivo**: https://questions.kachadigitalbcn.com/
+
+- **Documentación Swagger**: https://questions.kachadigitalbcn.com/docs
+- **ReDoc**: https://questions.kachadigitalbcn.com/redoc
+- **Health Check**: https://questions.kachadigitalbcn.com/health
+
 ## Características
 
 - **9 endpoints POST** organizados por categorías
@@ -29,6 +37,8 @@ API REST con 9 endpoints para recopilar datos de clientes a través de formulari
 
 ## Ejecución
 
+### Desarrollo Local
+
 ```bash
 # Opción 1: Usando uvicorn directamente
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
@@ -39,10 +49,33 @@ python main.py
 
 La API estará disponible en: http://localhost:8000
 
+### Docker (Recomendado)
+
+```bash
+# Crear la red externa
+docker network create optimroute
+
+# Construir y ejecutar con Docker Compose
+docker compose up --build
+
+# Solo construir
+docker compose build
+
+# Ejecutar en segundo plano
+docker compose up -d
+```
+
+La API estará disponible en: http://localhost:8000
+
 ## Documentación
 
+### Desarrollo Local
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
+
+### Producción
+- **Swagger UI**: https://questions.kachadigitalbcn.com/docs
+- **ReDoc**: https://questions.kachadigitalbcn.com/redoc
 
 ## Endpoints Disponibles
 
@@ -140,10 +173,17 @@ Todos los endpoints POST devuelven:
 
 ```
 kch-questions/
-├── main.py              # Aplicación FastAPI principal
-├── requirements.txt     # Dependencias Python
-├── README.md           # Este archivo
-└── venv/               # Entorno virtual (creado automáticamente)
+├── main.py                 # Aplicación FastAPI principal
+├── database.py             # Configuración de base de datos PostgreSQL
+├── init_database.py        # Script de inicialización de BD
+├── test_main.py           # Suite completa de tests con pytest
+├── requirements.txt        # Dependencias Python
+├── Dockerfile             # Configuración Docker
+├── docker-compose.yml     # Orquestación de servicios
+├── start.sh              # Script de inicio del contenedor
+├── .env                  # Variables de entorno
+├── README.md             # Este archivo
+└── venv/                 # Entorno virtual (desarrollo local)
 ```
 
 ## Notas de Desarrollo
@@ -209,8 +249,17 @@ Los tests cubren:
 También puedes usar la interfaz Swagger en `/docs` para probar todos los endpoints interactivamente, o utiliza curl/Postman con los ejemplos proporcionados.
 
 Ejemplo con curl:
+
+**Desarrollo local:**
 ```bash
 curl -X POST "http://localhost:8000/form/age" \
+     -H "Content-Type: application/json" \
+     -d '{"age": "25-35"}'
+```
+
+**Producción:**
+```bash
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "25-35"}'
 ```

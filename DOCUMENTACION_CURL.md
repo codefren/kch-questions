@@ -2,14 +2,24 @@
 
 Esta documentación proporciona ejemplos prácticos de cómo usar la API de formularios KCH con cURL.
 
-## Configuración inicial
+## 🌐 URLs Disponibles
 
-Asegúrate de que el servidor esté ejecutándose:
+### Producción (Recomendado)
+**URL Base**: `https://questions.kachadigitalbcn.com`
+- **Documentación**: https://questions.kachadigitalbcn.com/docs
+- **Health Check**: https://questions.kachadigitalbcn.com/health
+
+### Desarrollo Local
+**URL Base**: `http://localhost:8000`
+
+Para desarrollo local, asegúrate de que el servidor esté ejecutándose:
 ```bash
+# Opción 1: Con Docker (recomendado)
+docker compose up --build
+
+# Opción 2: Directamente con Python
 python main.py
 ```
-
-El servidor estará disponible en: `http://localhost:8000`
 
 ---
 
@@ -17,34 +27,45 @@ El servidor estará disponible en: `http://localhost:8000`
 **Endpoint:** `POST /form/age`
 
 ### Ejemplo básico:
+
+**Producción:**
+```bash
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
+     -H "Content-Type: application/json" \
+     -d '{"age": "25-35"}'
+```
+
+**Desarrollo local:**
 ```bash
 curl -X POST "http://localhost:8000/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "25-35"}'
 ```
 
-### Todas las opciones válidas:
+### Todas las opciones válidas (Producción):
 ```bash
 # Opción 1: 18-24 años
-curl -X POST "http://localhost:8000/form/age" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "18-24"}'
 
 # Opción 2: 25-35 años
-curl -X POST "http://localhost:8000/form/age" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "25-35"}'
 
 # Opción 3: 35-44 años
-curl -X POST "http://localhost:8000/form/age" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "35-44"}'
 
 # Opción 4: 45+ años
-curl -X POST "http://localhost:8000/form/age" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "45+"}'
 ```
+
+> 💡 **Nota**: Para desarrollo local, reemplaza `https://questions.kachadigitalbcn.com` con `http://localhost:8000`
 
 ### Respuesta esperada:
 ```json
@@ -437,6 +458,13 @@ curl -X POST "http://localhost:8000/form/contact" \
 **Endpoint:** `GET /debug/dump`
 
 ### Ver todos los datos almacenados:
+
+**Producción:**
+```bash
+curl -X GET "https://questions.kachadigitalbcn.com/debug/dump"
+```
+
+**Desarrollo local:**
 ```bash
 curl -X GET "http://localhost:8000/debug/dump"
 ```
@@ -460,28 +488,25 @@ curl -X GET "http://localhost:8000/debug/dump"
 
 ---
 
-## Script de Ejemplo Completo
+## Scripts de Ejemplo Completo
 
-Aquí tienes un script que envía datos a todos los formularios:
+### Script para Producción
 
 ```bash
 #!/bin/bash
 
-# URL base de la API
-BASE_URL="http://localhost:8000"
-
-echo "=== Enviando datos a todos los formularios KCH ==="
+echo "=== Enviando datos a todos los formularios KCH (PRODUCCIÓN) ==="
 
 # 1. Edad
 echo "1. Enviando edad..."
-curl -X POST "$BASE_URL/form/age" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
      -H "Content-Type: application/json" \
      -d '{"age": "25-35"}' \
      -w "\nStatus: %{http_code}\n\n"
 
 # 2. Datos personales
 echo "2. Enviando datos personales..."
-curl -X POST "$BASE_URL/form/personal-data" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/personal-data" \
      -H "Content-Type: application/json" \
      -d '{
        "name": "Ana Pérez García",
@@ -494,7 +519,7 @@ curl -X POST "$BASE_URL/form/personal-data" \
 
 # 3. Identificación
 echo "3. Enviando identificación..."
-curl -X POST "$BASE_URL/form/identification" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/identification" \
      -H "Content-Type: application/json" \
      -d '{
        "document_type": "DNI",
@@ -505,28 +530,28 @@ curl -X POST "$BASE_URL/form/identification" \
 
 # 4. Descubrimiento
 echo "4. Enviando canal de descubrimiento..."
-curl -X POST "$BASE_URL/form/discovery" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/discovery" \
      -H "Content-Type: application/json" \
      -d '{"source": "Instagram"}' \
      -w "\nStatus: %{http_code}\n\n"
 
 # 5. Tienda favorita
 echo "5. Enviando tienda favorita..."
-curl -X POST "$BASE_URL/form/favorite-store" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/favorite-store" \
      -H "Content-Type: application/json" \
      -d '{"store": "KCH Centro"}' \
      -w "\nStatus: %{http_code}\n\n"
 
 # 6. Tipo de envío
 echo "6. Enviando tipo de envío..."
-curl -X POST "$BASE_URL/form/delivery-type" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/delivery-type" \
      -H "Content-Type: application/json" \
      -d '{"service_type": "Express"}' \
      -w "\nStatus: %{http_code}\n\n"
 
 # 7. Productos
 echo "7. Enviando productos..."
-curl -X POST "$BASE_URL/form/products" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/products" \
      -H "Content-Type: application/json" \
      -d '{
        "products": ["Champú", "Acondicionador", "Serum facial"]
@@ -535,14 +560,14 @@ curl -X POST "$BASE_URL/form/products" \
 
 # 8. Conocimiento de promociones
 echo "8. Enviando conocimiento de promociones..."
-curl -X POST "$BASE_URL/form/weekly-promos-knowledge" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/weekly-promos-knowledge" \
      -H "Content-Type: application/json" \
      -d '{"answer": "Sí"}' \
      -w "\nStatus: %{http_code}\n\n"
 
 # 9. Contacto
 echo "9. Enviando información de contacto..."
-curl -X POST "$BASE_URL/form/contact" \
+curl -X POST "https://questions.kachadigitalbcn.com/form/contact" \
      -H "Content-Type: application/json" \
      -d '{
        "email": "ana.perez@gmail.com",
@@ -552,15 +577,114 @@ curl -X POST "$BASE_URL/form/contact" \
 
 # Ver todos los datos
 echo "=== Verificando datos almacenados ==="
-curl -X GET "$BASE_URL/debug/dump" | python -m json.tool
+curl -X GET "https://questions.kachadigitalbcn.com/debug/dump" | python -m json.tool
 
 echo -e "\n=== Proceso completado ==="
 ```
 
-### Para usar el script:
-1. Guarda el contenido en un archivo llamado `test_api.sh`
-2. Dale permisos de ejecución: `chmod +x test_api.sh`
-3. Ejecuta: `./test_api.sh`
+### Script para Desarrollo Local
+
+```bash
+#!/bin/bash
+
+echo "=== Enviando datos a todos los formularios KCH (LOCAL) ==="
+
+# 1. Edad
+echo "1. Enviando edad..."
+curl -X POST "http://localhost:8000/form/age" \
+     -H "Content-Type: application/json" \
+     -d '{"age": "25-35"}' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 2. Datos personales
+echo "2. Enviando datos personales..."
+curl -X POST "http://localhost:8000/form/personal-data" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "name": "Ana Pérez García",
+       "street": "Gran Vía",
+       "number": "123",
+       "floor": "4",
+       "door": "B"
+     }' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 3. Identificación
+echo "3. Enviando identificación..."
+curl -X POST "http://localhost:8000/form/identification" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "document_type": "DNI",
+       "document_number": "12345678Z",
+       "phone": "+34 600 123 456"
+     }' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 4. Descubrimiento
+echo "4. Enviando canal de descubrimiento..."
+curl -X POST "http://localhost:8000/form/discovery" \
+     -H "Content-Type: application/json" \
+     -d '{"source": "Instagram"}' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 5. Tienda favorita
+echo "5. Enviando tienda favorita..."
+curl -X POST "http://localhost:8000/form/favorite-store" \
+     -H "Content-Type: application/json" \
+     -d '{"store": "KCH Centro"}' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 6. Tipo de envío
+echo "6. Enviando tipo de envío..."
+curl -X POST "http://localhost:8000/form/delivery-type" \
+     -H "Content-Type: application/json" \
+     -d '{"service_type": "Express"}' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 7. Productos
+echo "7. Enviando productos..."
+curl -X POST "http://localhost:8000/form/products" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "products": ["Champú", "Acondicionador", "Serum facial"]
+     }' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 8. Conocimiento de promociones
+echo "8. Enviando conocimiento de promociones..."
+curl -X POST "http://localhost:8000/form/weekly-promos-knowledge" \
+     -H "Content-Type: application/json" \
+     -d '{"answer": "Sí"}' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# 9. Contacto
+echo "9. Enviando información de contacto..."
+curl -X POST "http://localhost:8000/form/contact" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "ana.perez@gmail.com",
+       "large_family": true
+     }' \
+     -w "\nStatus: %{http_code}\n\n"
+
+# Ver todos los datos
+echo "=== Verificando datos almacenados ==="
+curl -X GET "http://localhost:8000/debug/dump" | python -m json.tool
+
+echo -e "\n=== Proceso completado ==="
+```
+
+### Para usar los scripts:
+
+**Script de Producción:**
+1. Guarda el contenido en un archivo llamado `test_api_prod.sh`
+2. Dale permisos de ejecución: `chmod +x test_api_prod.sh`
+3. Ejecuta: `./test_api_prod.sh`
+
+**Script de Desarrollo Local:**
+1. Guarda el contenido en un archivo llamado `test_api_local.sh`
+2. Dale permisos de ejecución: `chmod +x test_api_local.sh`
+3. Ejecuta: `./test_api_local.sh`
 
 ---
 
@@ -580,6 +704,19 @@ echo -e "\n=== Proceso completado ==="
 5. **Silent**: Usa `-s` para suprimir la barra de progreso
 
 ### Ejemplo con archivo JSON:
+
+**Producción:**
+```bash
+# Crear archivo datos.json
+echo '{"age": "25-35"}' > datos.json
+
+# Usar el archivo
+curl -X POST "https://questions.kachadigitalbcn.com/form/age" \
+     -H "Content-Type: application/json" \
+     -d @datos.json
+```
+
+**Desarrollo local:**
 ```bash
 # Crear archivo datos.json
 echo '{"age": "25-35"}' > datos.json
