@@ -16,11 +16,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Configuración de la base de datos
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_USER = "postgres"
-DB_PASSWORD = "postgres"
-DB_NAME = "kacha-questions"
+DB_HOST = os.getenv("POSTGRES_HOST", "postgres")
+DB_PORT = os.getenv("POSTGRES_PORT", "5432")
+DB_USER = os.getenv("POSTGRES_USER", "production")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "yE9M!l4#wttl:kXrbvh,")
+DB_NAME = os.getenv("POSTGRES_DB", "kacha-app")
 
 # URL de conexión para crear la base de datos (sin especificar la DB)
 ADMIN_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/postgres"

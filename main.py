@@ -67,6 +67,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, EmailStr, constr
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from database import get_db, create_tables, FormSubmission, extract_fields_from_data
 
@@ -489,6 +490,29 @@ async def dump(db: Session = Depends(get_db)):
             "received_at": submission.received_at.isoformat()
         }
     return DebugDump(count=len(submissions), items=items)
+
+
+# Health check endpoint for Docker
+@app.get("/health", tags=["_system"])
+async def health_check():
+    """Health check endpoint for Docker container monitoring"""
+    try:
+        # Test database connection
+        from database import engine
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "database": "disconnected",
+            "error": str(e),
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
 
 
 if __name__ == "__main__":
